@@ -1,9 +1,13 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views import View
 from .models import Post
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, HttpResponse
+from django.urls import reverse
+
 
 @csrf_exempt
 def home(request):
@@ -55,18 +59,35 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, View):
     model = Post
     success_url = '/'
 
-    def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.author:
-            return True
-        return False
+    # def test_func(self):
+    #     post = self.get_object()
+    #     if self.request.user == post.author:
+    #         print(self.request.user == post.author)
+    #         return True
+    #     return False
 
-    def get(self, *args, **kwargs):
-        return self.post(*args, **kwargs)
+    
+
+    def post(self, request, pk):
+        print(pk)
+
+        post = Post.objects.get(pk=pk)
+        print(post)
+
+        if post.author == request.user:
+            post.delete()
+            print("dsdads")
+
+
+
+        return redirect(reverse('blog-home'))
+
+        #return HttpResponse('result')
+
 
 
 def about(request):

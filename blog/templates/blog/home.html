@@ -59,21 +59,29 @@
                         
                         
                         <!-- Trigger/Open The Modal -->
-                        <button id="myBtn">...</button>
+                        <button id="myBtn-{{post.pk}}">...</button>
                         
                         <!-- The Modal -->
-                        <div id="myModal" class="modal">
+                        <div id="myModal-{{post.pk}}" class="modal">
                         
                         <!-- Modal content -->
 
 
                         <div class="modal-content">
                             <span class="close">&times;</span>
+
                             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}">Update</a>
-                            <form method="POST" action="{% url 'post-detail' post.id %}">
-                                {% csrf_token %}<input type="submit" value="DELETE">
+
+                            <form method="POST" action="{% url 'post-delete' post.id %}">
+                                {{ post.id }}
+                                {{ post.pk }}
+                                {% csrf_token %}
+                                <input type="submit" value="DELETE">
+                                <a class="btn btn-danger btn-sm mt-1 mb-1" href="#" onclick="deleteData('', '{{post.pk}}');">Delete</a>
                              </form>
-                            <!-- <a class="btn btn-danger btn-sm mt-1 mb-1" href="#" onclick="deleteData('', js_list);">Delete</a> -->
+
+
+                            
                         </div>
                         
                         </div>
@@ -98,12 +106,14 @@
                         }
 
                         // Get the modal
-                        var modal = document.getElementById("myModal");
+                        var modal = document.getElementById("myModal-{{post.pk}}");
 
-                        var js_list = "{% url 'post-detail' post.id %}";
+                        var js_list = "{% url 'post-delete' post.id %}";
+                        console.log(js_list)
+                        console.log('{{post.title}}')
                         
                         // Get the button that opens the modal
-                        var btn = document.getElementById("myBtn");
+                        var btn = document.getElementById("myBtn-{{post.pk}}");
                         
                         // Get the <span> element that closes the modal
                         var span = document.getElementsByClassName("close")[0];
@@ -112,6 +122,7 @@
                         btn.onclick = function() {
                         modal.style.display = "block";
                         }
+                        console.log(modal)
                         
                         // When the user clicks on <span> (x), close the modal
                         span.onclick = function() {
@@ -140,8 +151,9 @@
                             
                             // });
                             // return response.json();
-                            return fetch(url + data, {
-                                method: 'DELETE',
+                            let fullURL = '/post/' + data + '/delete/';
+                            return await fetch(fullURL, {
+                                method: 'POST',
                                 mode: 'cors',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -151,7 +163,7 @@
                                 credentials: 'include'
                                 
                             })
-                            .then(response => response.json())
+                            .then(response => location.reload())
                             .catch(err => console.log(err));
                         }
 
