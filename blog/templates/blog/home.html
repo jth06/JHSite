@@ -73,10 +73,10 @@
                             <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' post.id %}">Update</a>
 
                             <form method="POST" action="">
-                                {{ post.id }}
-                                {{ post.pk }}
+                                <!-- {{ post.id }}
+                                {{ post.pk }} -->
                                 {% csrf_token %}
-                                <input type="submit" value="DELETE">
+                                <!-- <input type="submit" value="DELETE"> -->
                                 <a class="btn btn-danger btn-sm mt-1 mb-1" href="#" onclick="deleteData('', '{{post.pk}}');">Delete</a>
                              </form>
 
@@ -126,7 +126,7 @@
             
             // Get the button that opens the modal
             var btn = document.getElementById("myBtn-" + pk.toString());
-            console.log(btn)
+            //console.log(btn)
             
             // Get the <span> element that closes the modal
             // var span = document.getElementsByClassName("close")[0];
@@ -135,7 +135,7 @@
             btn.onclick = function() {
             modal.style.display = "block";
             }
-            console.log(modal)
+            //console.log(modal)
             
             // When the user clicks on <span> (x), close the modal
             // span.onclick = function() {
