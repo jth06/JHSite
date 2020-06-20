@@ -3,8 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 def home(request):
     context = {
         'posts': Post.objects.all()
@@ -63,6 +64,9 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == post.author:
             return True
         return False
+
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
 
 def about(request):
